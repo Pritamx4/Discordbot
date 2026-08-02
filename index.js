@@ -52,7 +52,7 @@ client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
 
   // Sirf verification channel me kaam karega
-  if (message.channel.id !== CHANNEL) return;
+//  if (message.channel.id !== CHANNEL) return;
 
   // Mention Detect
   if (message.mentions.users.has(TARGET)) {
