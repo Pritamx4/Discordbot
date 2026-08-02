@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "discord-api-types": "^0.38.52",
     "discord.js": "^14.27.0",

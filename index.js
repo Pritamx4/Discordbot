@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const http = require("node:http");
 const {
   Client,
   GatewayIntentBits,
@@ -21,6 +22,7 @@ const CRAFTLAND_UID = process.env.CRAFTLAND_UID || "2088082744";
 const COMMAND_PREFIX = process.env.COMMAND_PREFIX || "!";
 const AUTO_POST_MINUTES = Number(process.env.AUTO_POST_MINUTES || 10);
 const REPLY_COOLDOWN_SECONDS = Number(process.env.REPLY_COOLDOWN_SECONDS || 30);
+const PORT = process.env.PORT;
 
 const submittedUsers = new Set();
 const replyCooldowns = new Map();
@@ -32,9 +34,32 @@ function validateConfig() {
   if (!TARGET) missing.push("TARGET_USER_ID");
 
   if (missing.length > 0) {
-    console.error(`Missing required .env value(s): ${missing.join(", ")}`);
+    console.error(`Missing required environment value(s): ${missing.join(", ")}`);
+    console.error("Local development reads .env. Deployments usually need these values added in the hosting dashboard as secrets/environment variables.");
     process.exit(1);
   }
+}
+
+function startHealthServer() {
+  if (!PORT) return;
+
+  const server = http.createServer((req, res) => {
+    if (req.url === "/health") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({
+        ok: true,
+        bot: client.user ? client.user.tag : "starting",
+      }));
+      return;
+    }
+
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Craftland Discord bot is running.");
+  });
+
+  server.listen(PORT, () => {
+    console.log(`Health server listening on port ${PORT}`);
+  });
 }
 
 function hasCooldown(userId) {
@@ -57,8 +82,8 @@ Please follow my **Free Fire Craftland** map.
 
 **Craftland UID:** \`${CRAFTLAND_UID}\`
 
-**Step 2:** Search this UID: \`${CRAFTLAND_UID}\`
 **Step 1:** Open Craftland.
+**Step 2:** Search this UID: \`${CRAFTLAND_UID}\`
 **Step 3:** Follow my Craftland map.
 
 If this server has a verification channel, upload a screenshot there and type **done**.
@@ -97,6 +122,7 @@ async function sendCraftlandReply(message) {
 }
 
 validateConfig();
+startHealthServer();
 
 client.once("ready", async () => {
   console.log(`${client.user.tag} is Online`);
