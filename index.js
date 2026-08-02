@@ -57,8 +57,8 @@ Please follow my **Free Fire Craftland** map.
 
 **Craftland UID:** \`${CRAFTLAND_UID}\`
 
-**Step 1:** Open Free Fire Craftland.
 **Step 2:** Search this UID: \`${CRAFTLAND_UID}\`
+**Step 1:** Open Craftland.
 **Step 3:** Follow my Craftland map.
 
 If this server has a verification channel, upload a screenshot there and type **done**.
